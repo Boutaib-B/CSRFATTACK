@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
 
-public interface CompteRepository extends JpaRepository<Compte, UUID> {
-    Compte getOne(UUID code);
+public interface CompteRepository extends JpaRepository<Compte, Long> {
+    Compte getOne(Long code);
 }

@@ -5,5 +5,5 @@ import ensa.ssi.csrf.target.services.IBaseService;
 
 import java.util.UUID;
 
-public interface ICompteService extends IBaseService<Compte, UUID> {
+public interface ICompteService extends IBaseService<Compte, Long> {
 }

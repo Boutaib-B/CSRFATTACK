@@ -12,7 +12,7 @@ import javax.transaction.Transactional;
 import java.util.UUID;
 
 @Service @Transactional @Slf4j
-public class CompteService extends BaseService<Compte, UUID> implements ICompteService {
+public class CompteService extends BaseService<Compte, Long> implements ICompteService {
     private CompteRepository repository;
 
     @Autowired

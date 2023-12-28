@@ -3,10 +3,10 @@ package ensa.ssi.csrf.target.services;
 import java.util.List;
 import java.util.Optional;
 
-public interface IBaseService<T, Key> {
-    void saveEntity(T entity);
-    Optional<T> findEntityByKey(Key key);
+public interface IBaseService<T, Long> {
+    T saveEntity(T entity);
+    Optional<T> findEntityByLong(Long key);
     List<T> getAllEntities();
-    void deleteEntity(Key key);
-    void deleteAllEntities(List<Key> keys);
+    void deleteEntity(Long key);
+    void deleteAllEntities(List<Long> keys);
 }

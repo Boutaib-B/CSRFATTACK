@@ -11,5 +11,5 @@ import java.util.UUID;
 
 public interface OperationRepository extends JpaRepository<Operation, Long> {
     @Query("SELECT o FROM Operation o WHERE o.compte.code=:c")
-    Page<Operation> opPageList(@Param("c") UUID code, Pageable pageable);
+    Page<Operation> opPageList(@Param("c") Long code, Pageable pageable);
 }

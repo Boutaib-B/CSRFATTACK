@@ -14,8 +14,8 @@ import java.util.UUID;
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING, length = 8)
 public abstract class Compte implements Serializable {
     @Id
-    @GeneratedValue
-    private UUID code;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long code;
     private Date dateCreation;
     private double solde;
     @ManyToOne

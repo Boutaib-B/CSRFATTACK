@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service @Transactional @Slf4j
 public class OperationService extends BaseService<Operation, Long> implements IOperationService {
@@ -29,7 +28,7 @@ public class OperationService extends BaseService<Operation, Long> implements IO
     }
 
     @Override
-    public void verser(UUID codeCompte, double montant) {
+    public void verser(Long codeCompte, double montant) {
         log.info("Versement dans compte "+codeCompte.toString()+", montant : "+montant);
         Compte compte = compteRepository.getOne(codeCompte);
         if (compte == null)
@@ -41,7 +40,7 @@ public class OperationService extends BaseService<Operation, Long> implements IO
     }
 
     @Override
-    public void retirer(UUID codeCompte, double montant) {
+    public void retirer(Long codeCompte, double montant) {
         log.info("Retrait sur compte "+codeCompte.toString()+", montant : "+montant);
         Compte compte = compteRepository.getOne(codeCompte);
         if (compte == null)
@@ -58,7 +57,7 @@ public class OperationService extends BaseService<Operation, Long> implements IO
     }
 
     @Override
-    public void virement(UUID codeCompte1, UUID codeCompte2, double montant) {
+    public void virement(Long codeCompte1, Long codeCompte2, double montant) {
         if (codeCompte1.equals(codeCompte2))
             throw new RuntimeException("Impossible virement sur le meme compte!");
         retirer(codeCompte1, montant);
@@ -66,7 +65,9 @@ public class OperationService extends BaseService<Operation, Long> implements IO
     }
 
     @Override
-    public Page<Operation> opPageList(UUID codeCompte, int page, int size) {
+    public Page<Operation> opPageList(Long codeCompte, int page, int size) {
         return operationRepository.opPageList(codeCompte, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "date")));
     }
+
+
 }

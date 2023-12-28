@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Controller
 public class OperationController {
@@ -28,12 +27,12 @@ public class OperationController {
                          @RequestParam("montant") String montant,
                          @RequestParam("codeBeneficiaire") Optional<String> codeBeneficiaire){
 
-        UUID code = UUID.fromString(codeCompte);
-        UUID codeBenefic = null;
+        Long code = Long.valueOf(codeCompte);
+        Long codeBenefic = null;
         double amount = 0;
         try {
             if (codeBeneficiaire.isPresent()){
-                codeBenefic = UUID.fromString(codeBeneficiaire.get());
+                codeBenefic = Long.valueOf(codeBeneficiaire.get());
             }
             amount = Double.parseDouble(montant);
 

@@ -5,6 +5,8 @@ import ensa.ssi.csrf.target.entities.Operation;
 import ensa.ssi.csrf.target.services.compte.CompteService;
 import ensa.ssi.csrf.target.services.operation.OperationService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,8 @@ import java.util.UUID;
 
 @Controller
 public class CompteController {
+
+    private static final Logger logger = LoggerFactory.getLogger(CompteController.class);
     private CompteService compteService;
     private OperationService operationService;
 
@@ -28,26 +32,27 @@ public class CompteController {
     }
 
     @RequestMapping("/comptes")
-    public String index(Model model){
+    public String index(Model model) {
         try {
             List<Compte> comptes = compteService.getAllEntities();
+            logger.info("comptes: {}", comptes);
+            System.out.println("comptes: " + comptes);
             model.addAttribute("comptes", comptes);
         } catch (Exception e) {
             model.addAttribute("exception", e);
-        } finally {
-            return "compte";
         }
+        return "comptes"; // Return the appropriate template name
     }
 
-    @RequestMapping("/comptes/{suuid}")
-    public String single(Model model, @PathVariable("suuid") String suuid){
-        UUID uuid = UUID.fromString(suuid);
+
+    @RequestMapping("/comptes/{id}")
+    public String single(Model model, @PathVariable("id") Long id){
         try {
-            Optional<Compte> compte = compteService.findEntityByKey(uuid);
+            Optional<Compte> compte = compteService.findEntityByLong(id);
             if (compte.isEmpty()) {
                 return "404";
             }
-            Page<Operation> opListPage = operationService.opPageList(uuid, 0, 4);
+            Page<Operation> opListPage = operationService.opPageList(id, 0, 4);
             model.addAttribute("opListPage", opListPage.getContent());
             model.addAttribute("compte", compte.get());
         } catch (Exception e) {
