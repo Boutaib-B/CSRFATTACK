@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8" />
+    <title>CSRF Target - Comptes</title>
+</head>
+<body>
+    <div layout:fragment="content" class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 py-5">
+            <div class="col d-flex align-items-start" th:each="c:${comptes}" th:if="${#authentication.principal.username==c.client.username}">
+                <div >
+                    <h3 class="fw-bold mb-0 fs-4" th:text="${c.class.simpleName}"></h3>
+                    <p th:text="${c.code}"></p>
+                    <a th:href="@{'/comptes/' + ${c.code}}" class="btn btn-primary">
+                        Consulter Compte
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

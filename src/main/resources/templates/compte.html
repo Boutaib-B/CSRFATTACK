@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Compte Details</title>
+</head>
+<body>
+    <div layout:fragment="content" class="container d-md-flex" th:if="${compte}">
+        <div class="col-md-4 col-12">
+            <div class="card card-primary">
+                <div class="card-header">Information sur le compte</div>
+                <div class="card-body">
+                    <div>
+                        <label>Client : </label>
+                        <label th:text="${compte.client.nom}"></label>
+                    </div>
+                    <div>
+                        <label>Code : </label>
+                        <label th:text="${compte.code}"></label>
+                    </div>
+                    <div>
+                        <label>Solde : </label>
+                        <label th:text="${compte.solde}"></label>
+                    </div>
+                    <div>
+                        <label>Date Creation : </label>
+                        <label th:text="${compte.dateCreation}"></label>
+                    </div>
+                    <div>
+                        <label>Type : </label>
+                        <label th:text="${compte.class.simpleName}"></label>
+                    </div>
+                    <div th:if="${compte.class.simpleName == 'CompteCourant'}">
+                        <label>Decouvert : </label>
+                        <label th:text="${compte.decouvert}"></label>
+                    </div>
+                    <div th:if="${compte.class.simpleName == 'CompteEpargne'}">
+                        <label>Taux : </label>
+                        <label th:text="${compte.taux}"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="px-2"></div>
+        <div class="col-md-8 col-12">
+            <div class="card card-primary">
+                <div class="card-header">Operation sur le compte</div>
+                <div class="card-body">
+                        <div class="my-2">
+                            <label >Compte : </label>
+                            <label th:text="${compte.code}"></label>
+                        </div>
+                        <nav>
+                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                <button class="nav-link" id="nav-virement-tab" data-bs-toggle="tab" data-bs-target="#nav-virement" type="button" role="tab" aria-controls="nav-virement" aria-selected="true">Virement</button>
+                                <button sec:authorize="${hasRole('ROLE_ADMIN')}" class="nav-link active" id="nav-versement-tab" data-bs-toggle="tab" data-bs-target="#nav-versement" type="button" role="tab" aria-controls="nav-versement" aria-selected="false">Versement</button>
+                                <button sec:authorize="${hasRole('ROLE_ADMIN')}" class="nav-link" id="nav-retrait-tab" data-bs-toggle="tab" data-bs-target="#nav-retrait" type="button" role="tab" aria-controls="nav-retrait" aria-selected="false">Retrait</button>
+<!--                                <button class="nav-link" id="nav-disabled-tab" data-bs-toggle="tab" data-bs-target="#nav-disabled" type="button" role="tab" aria-controls="nav-disabled" aria-selected="false" disabled>Disabled</button>-->
+                            </div>
+                        </nav>
+                        <div class="tab-content" id="nav-tabContent">
+                            <div sec:authorize="${hasRole('ROLE_ADMIN')}" class="tab-pane fade show active" id="nav-versement" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+                                <form th:action="@{/operations}" class="py-3">
+                                    <input type="hidden" name="codeCompte" th:value="${compte.code}" />
+                                    <input type="hidden" name="opType" value="versement" />
+                                    <div class="row mb-3 text-right">
+                                        <label for="montantVerser" class="col-sm-2 col-form-label">Montant</label>
+                                        <div class="col-sm-10">
+                                            <input type="number" class="form-control" required name="montant" id="montantVerser">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 px-2">
+                                        <button type="submit" class="btn btn-primary">Valider</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div sec:authorize="${hasRole('ROLE_ADMIN')}" class="tab-pane fade" id="nav-retrait" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+                                <form th:action="@{/operations}" class="py-3">
+                                    <input type="hidden" name="codeCompte" th:value="${compte.code}" />
+                                    <input type="hidden" name="opType" value="retrait" />
+                                    <div class="row mb-3">
+                                        <label for="montantRetirer" class="col-sm-2 col-form-label">Montant</label>
+                                        <div class="col-sm-10">
+                                            <input type="number" class="form-control" required name="montant" id="montantRetirer">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 px-2">
+                                        <button type="submit" class="btn btn-primary">Valider</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="tab-pane fade" id="nav-virement" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">
+                                <form th:action="@{/operations}" method="get" class="py-3">
+                                    <input type="hidden" name="codeCompte" th:value="${compte.code}" />
+                                    <input type="hidden" name="opType" value="virement" />
+                                    <div class="row mb-3">
+                                        <label for="montantVir" class="col-sm-2 col-form-label">Montant</label>
+                                        <div class="col-sm-10">
+                                            <input type="number" class="form-control" required name="montant" id="montantVir">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="codeBeneficiaire" class="col-sm-2 col-form-label">Beneficiaire</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" required name="codeBeneficiaire" id="codeBeneficiaire">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 px-2">
+                                        <button type="submit" class="btn btn-primary">Valider</button>
+                                    </div>
+                                    <div class="row mb-3 px-2" th:if="${#httpServletRequest.getParameter('error') != null}">
+                                        <div class="alert alert-danger" th:text="${#httpServletRequest.getParameter('error')}"></div>
+                                    </div>
+                                </form>
+                            </div>
+<!--                            <div class="tab-pane fade" id="nav-disabled" role="tabpanel" aria-labelledby="nav-disabled-tab" tabindex="0">...</div>-->
+                        </div>
+                </div>
+            </div>
+            <div class="py-2"></div>
+            <div class="card card-primary">
+                <div class="card-header">Liste des operations</div>
+                <div class="card-body">
+                    <h5 class="card-title" th:if="${opListPage.size() == 0}">Aucune opertaion pour ce compte</h5>
+                    <table class="table" th:if="${opListPage.size() > 0}">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Montant</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="o:${opListPage}">
+                                <th scope="row" th:text="${o.numero}"></th>
+                                <td th:text="${o.class.simpleName}"></td>
+                                <td th:text="${o.date}"></td>
+                                <td th:text="${o.montant}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!--    <div layout:fragment="content" th:if="${exception}">-->
+<!--        <h1 class="text-center pt-5" th:text="${exception.message}"></h1>-->
+<!--    </div>-->
+</body>
+</html>
